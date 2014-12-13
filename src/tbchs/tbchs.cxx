@@ -74,7 +74,7 @@ char tbchsmsg[80];
 
 static char payloadtxt[90];
 static char payloadtxtfinal[100];
-long long tag = (0xB74DB7DF8A532F3E);		//  correlation tag value  //This is reveresed order for bit by bit routine.
+unsigned long long tag = (0xB74DB7DF8A532F3E);		//  correlation tag value  //This is reveresed order for bit by bit routine.
 uint64_t ltemp1 = 0;                        // this one needs to be persistent
 uint64_t ltemp2;
 
