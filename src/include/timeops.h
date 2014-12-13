@@ -26,8 +26,8 @@ bool operator>(const struct timeval &t0, const struct timeval &t1);
 bool operator==(const struct timeval &t0, const struct timeval &t1);
 
 #ifndef GMTIME_R
-extern struct tm *gmtime_r(const time_t *timer, struct tm *tmbuf);
-extern struct tm *localtime_r(const time_t *_Time,struct tm *_Tm);
+//extern struct tm *gmtime_r(const time_t *timer, struct tm *tmbuf);
+//extern struct tm *localtime_r(const time_t *_Time,struct tm *_Tm);
 #endif
 
 #endif // TIMEOPS_H_

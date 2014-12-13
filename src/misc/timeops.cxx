@@ -174,7 +174,7 @@ bool operator==(const struct timeval &t0, const struct timeval &t1)
 	return t0.tv_sec == t1.tv_sec && t0.tv_usec == t1.tv_usec;
 }
 
-
+/*
 #ifndef HAVE_GMTIME_R
 #include "threads.h"
 
@@ -201,3 +201,4 @@ struct tm *localtime_r(const time_t *_Time,struct tm *_Tm)
 }
 
 #endif
+*/
