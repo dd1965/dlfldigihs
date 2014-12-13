@@ -576,6 +576,11 @@ void cRsId::setup_mode(int iSymbol)
 		progdefaults.contestiabw = 4;
 		REQ(&set_contestia_tab_widgets);
 		break;
+    case RSID_PACKET_1200:
+		
+		REQ(&set_tbchs_tab_widgets);
+		break;
+
 	default:
 		break;
 	} // switch (iSymbol)

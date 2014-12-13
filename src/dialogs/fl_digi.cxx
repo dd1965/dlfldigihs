@@ -95,6 +95,9 @@
 #include "analysis.h"
 #include "ssb.h"
 
+/*Changes for VK3TBC 1200 additions*/
+#include "tbchs.h"
+/*End changes for VK3TBC 1200 additions*/
 #include "ascii.h"
 #include "globals.h"
 #include "misc.h"
@@ -823,6 +826,11 @@ void cb_contestiaCustom(Fl_Widget *w, void *arg)
 	dlgConfig->show();
 	cb_init_mode(w, arg);
 }
+void set_tbchs_tab_widgets()
+{
+init_modem(reinterpret_cast<trx_mode>( (void *)MODE_tbchs));
+}
+
 
 void set_rtty_tab_widgets()
 {
@@ -1148,6 +1156,11 @@ LOG_INFO("mode: %d, freq: %d", (int)mode, freq);
 		startup_modem(*mode_info[mode].modem ? *mode_info[mode].modem :
 			      *mode_info[mode].modem = new NULLMODEM, freq);
 		break;
+    case MODE_tbchs:
+		startup_modem(*mode_info[mode].modem ? *mode_info[mode].modem :
+			      *mode_info[mode].modem = new tbchs, freq);
+		break;
+
 
 	case MODE_CW:
 		startup_modem(*mode_info[mode].modem ? *mode_info[mode].modem :
@@ -3608,8 +3621,9 @@ static Fl_Menu_Item menu_[] = {
 
 { mode_info[MODE_WWV].name, 0, cb_init_mode, (void *)MODE_WWV, 0, FL_NORMAL_LABEL, 0, 14, 0},
 { mode_info[MODE_ANALYSIS].name, 0, cb_init_mode, (void *)MODE_ANALYSIS, FL_MENU_DIVIDER, FL_NORMAL_LABEL, 0, 14, 0},
-
+{ mode_info[MODE_tbchs].name, 0, cb_init_mode, (void *)MODE_tbchs, 0, FL_NORMAL_LABEL, 0, 14, 0},
 { mode_info[MODE_NULL].name, 0, cb_init_mode, (void *)MODE_NULL, 0, FL_NORMAL_LABEL, 0, 14, 0},
+
 { mode_info[MODE_SSB].name, 0, cb_init_mode, (void *)MODE_SSB, 0, FL_NORMAL_LABEL, 0, 14, 0},
 
 { OPMODES_FEWER, 0, cb_opmode_show, 0, FL_MENU_INVISIBLE, FL_NORMAL_LABEL, FL_HELVETICA_ITALIC, 14, 0 },
@@ -5717,8 +5731,9 @@ static Fl_Menu_Item alt_menu_[] = {
 
 { mode_info[MODE_WWV].name, 0, cb_init_mode, (void *)MODE_WWV, 0, FL_NORMAL_LABEL, 0, 14, 0},
 { mode_info[MODE_ANALYSIS].name, 0, cb_init_mode, (void *)MODE_ANALYSIS, FL_MENU_DIVIDER, FL_NORMAL_LABEL, 0, 14, 0},
-
+{ mode_info[MODE_tbchs].name, 0, cb_init_mode, (void *)MODE_tbchs, 0, FL_NORMAL_LABEL, 0, 14, 0},
 { mode_info[MODE_NULL].name, 0, cb_init_mode, (void *)MODE_NULL, 0, FL_NORMAL_LABEL, 0, 14, 0},
+
 { mode_info[MODE_SSB].name, 0, cb_init_mode, (void *)MODE_SSB, 0, FL_NORMAL_LABEL, 0, 14, 0},
 
 {0,0,0,0,0,0,0,0,0},

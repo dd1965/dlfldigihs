@@ -62,7 +62,7 @@
                                                         \
         ELEM_(113, PACKET_110, NUM_MODES)               \
         ELEM_(35, PACKET_300, NUM_MODES)                \
-        ELEM_(36, PACKET_1200, NUM_MODES)               \
+        ELEM_(36, PACKET_1200, MODE_tbchs)              \
                                                         \
         ELEM_(37, RTTY_ASCII_7, MODE_RTTY)              \
         ELEM_(38, RTTY_ASCII_8, MODE_RTTY)              \

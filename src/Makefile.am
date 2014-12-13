@@ -425,6 +425,7 @@ dl_fldigi_SOURCES += \
 	include/threads.h \
 	include/throb.h \
 	include/timeops.h \
+include/tbchs.h \
 	include/trx.h \
 	include/util.h \
 	include/Viewer.h \
@@ -552,6 +553,7 @@ dl_fldigi_SOURCES += \
 	ssb/ssb.cxx \
 	synop-src/synop.cxx \
 	throb/throb.cxx \
+tbchs/tbchs.cxx \
 	trx/modem.cxx \
 	trx/nullmodem.cxx \
 	trx/trx.cxx \

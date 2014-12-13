@@ -294,6 +294,7 @@ extern void LOGBOOK_colors_font();
 extern void colorize_macro(int i);
 extern void colorize_macros();
 
+extern void set_tbchs_tab_widgets();
 extern void set_rtty_tab_widgets();
 extern void set_olivia_tab_widgets();
 extern void set_olivia_default_integ();

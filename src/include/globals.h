@@ -50,7 +50,7 @@ enum {
 	MODE_NEXT,
 
 	MODE_NULL,
-
+	MODE_tbchs,
 	MODE_CW,
 
 	MODE_CONTESTIA,

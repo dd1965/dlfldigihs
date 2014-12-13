@@ -44,6 +44,7 @@
 #include "qrunner.h"
 #include "debug.h"
 #include "nullmodem.h"
+#include "tbchs.h"
 #include "macros.h"
 
 #if BENCHMARK_MODE

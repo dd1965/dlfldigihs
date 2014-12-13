@@ -194,7 +194,7 @@ protected:
 };
 
 extern modem *null_modem;
-
+extern modem *tbchs_modem;
 extern modem *cw_modem;
 
 extern modem *mfsk8_modem;

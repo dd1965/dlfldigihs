@@ -117,7 +117,7 @@
 
 #include "dl_fldigi/dl_fldigi.h"
 #include "nullmodem.h"
-
+#include "tbchs.h"
 using namespace std;
 
 string appname;
