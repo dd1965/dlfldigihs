@@ -690,7 +690,7 @@ int tbchs::getData1(byte bitin)
 
   uint64_t bitin64=0;
 
-  if (bitin == 1) bitin64 = 0x8000000000000000;
+  if (bitin == 1) bitin64 = 0x8000000000000000ULL;
   phasedetectbits = (phasedetectbits >> 1);
   phasedetectbits = ((uint64_t)phasedetectbits | (uint64_t)bitin64);
 
