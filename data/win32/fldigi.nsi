@@ -128,6 +128,9 @@ SectionEnd
         StrCpy $WANT_FLDIGI "true"
     SectionEnd
 !endif
+   file "libgcc_s_sjlj-1.dll"
+   file "libstdc++-6.dll"
+   file "pthreadGC2.dll"
 
 # This section is present if the installer contains flarq.  It is optional if
 # the installer also contains fldigi.
