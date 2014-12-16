@@ -122,6 +122,9 @@ SectionEnd
         SectionIn RO
         SetOutPath $INSTDIR
         File "${FLDIGI_BINARY}"
+	file "libgcc_s_sjlj-1.dll"
+ 	file "libstdc++-6.dll"
+   	file "pthreadGC2.dll"
         !ifdef FLDIGI_LOCALE_DIR
 	    File /r "${FLDIGI_LOCALE_PATH}/${FLDIGI_LOCALE_DIR}"
         !endif
