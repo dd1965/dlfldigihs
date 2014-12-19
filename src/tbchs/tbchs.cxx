@@ -1,11 +1,20 @@
 // ----------------------------------------------------------------------------
 // tbchs.cxx  --  tbchs modem
+// This demodulator demodulates concurrently
+// 1) 1200 Telemetry and SSDV with a Gold Code header
+// 2) 1200 AO40 FEC Telemetry and SSDV
+// This code has been based on the fldigi example code to incorporate the modem
+// into FLDIGI. In addition it incorporates the code by Phil Karn KA9Q for
+// the AO40 FEC decoder. Also, it incorporates another mode which is also based on
+// FX25 article from Phil Karn KA9Q. It retains the original licencing conditions as referenced
+// below. Also, it incorporated 1200 demodulation technique used in a white paper (in German)
+// from Thomas Sailor. Enjoy Cheers VK3TBC David Dessardo... and one day I will refactor some code...
 //
 // Copyright (C) 2006
 //		Dave Freese, W1HKJ
 //
 // This file is part of fldigi.  Adapted from code contained in gMFSK source code
-// distribution.
+// distribution. 
 //  gMFSK Copyright (C) 2001, 2002, 2003
 //  Tomi Manninen (oh2bns@sral.fi)
 //
@@ -53,18 +62,18 @@ string s = "PSB,0001,000000,0.0,0.0,0,0,0,0,107,26,7656";
  string comma = ",";
 string asterisk ="*";
 string dollar= "$$";
-		   string lcallsign;
-		   string sequence;
-		   string ltime;
-		   string latstring ;
-		   string longstring;
-		   string altitude ;
-		   string speed;
-		   string satno ;
-		   string satfix ;
-		   string insidetemp;
-		   string outsidetemp;
-		   string volts;   
+string lcallsign;
+string sequence;
+string ltime;
+string latstring ;
+string longstring;
+string altitude ;
+string speed;
+string satno ;
+string satfix ;
+string insidetemp;
+string outsidetemp;
+string volts;   
 
 uint8_t pkt[256];
 char msg[80];
@@ -74,7 +83,7 @@ char tbchsmsg[80];
 
 static char payloadtxt[90];
 static char payloadtxtfinal[100];
-unsigned long long tag = (0xB74DB7DF8A532F3EULL);		//  correlation tag value  //This is reveresed order for bit by bit routine.
+uint64_t tag = (0xB74DB7DF8A532F3E);		//  correlation tag value  //This is reveresed order for bit by bit routine.
 uint64_t ltemp1 = 0;                        // this one needs to be persistent
 uint64_t ltemp2;
 
@@ -357,13 +366,8 @@ void tbchs::init()
 {
 	modem::init();
 	rx_init();
-	//if (digiscope)
-	//	digiscope->mode(Digiscope::RTTY);
 	init_sync();
-	put_rx_char('T');
-	put_rx_char('e');
-	put_rx_char('s');
-	put_rx_char('t');
+	
 }
 
 tbchs::~tbchs()
@@ -588,7 +592,8 @@ int32_t tbchs::demodulate(int16_t input) {
 int  tbchs::decodeGold1( uint64_t keycode)
 {
   /***************************************************************************/
-  // Autocorrelation calculation for a 64-bit correlation tag value
+  //Modified from Phil Karns FX25 article
+  //Autocorrelation calculation for a 64-bit correlation tag value
   //
   // Data is stored locally in a static 64-bit variable.  The most recent byte
   // provides the next 8 bits in time sequence, and is shifted-in to the LSB
@@ -605,7 +610,8 @@ int  tbchs::decodeGold1( uint64_t keycode)
   // the bit-offset is zero, "data" represents the last byte of the correlationt tag, and
   // the next byte in time sequence will be an information byte.
   //
-  //
+  // Note: this routine was modified to be bit by bit so that the start of the
+  // byte position was always aligned VK3TBC David D.
   /***************************************************************************/
 
   
@@ -642,8 +648,9 @@ void tbchs::decode(int16_t inbyte) {
   bit_phase =(uint16_t)(temp & 0xffff);
   if (temp > 0xffff)
   {
-   // bitinwithGC(inbyte);
+    
 	 decodeAO40bit((unsigned char)inbyte);
+	 bitinwithGC(inbyte);
 	//bitinwithGCFEC(inbyte);
 	inp_ptr = (inp_ptr + 1) % MAXPIPE;
 
@@ -690,15 +697,16 @@ int tbchs::getData1(byte bitin)
 
   uint64_t bitin64=0;
 
-  if (bitin == 1) bitin64 = 0x8000000000000000ULL;
+  if (bitin == 1) bitin64 = 0x8000000000000000;
   phasedetectbits = (phasedetectbits >> 1);
   phasedetectbits = ((uint64_t)phasedetectbits | (uint64_t)bitin64);
 
   int sum = decodeGold1(phasedetectbits); 
-  display_metric(sum*2);
+ 
   if (sum > 40){
+	display_metric(sum*2);
     bitcnt = 8;
-	put_rx_char('G');
+	//put_rx_char('G');
     //Serial.print("Correlation found");
     return 2;
   }
@@ -1570,8 +1578,7 @@ void tbchs::decodeAO40bit(unsigned char decoderbyte){
 		   //  put_rx_char('-');
 		}
        
-     // Serial.print(raw[index]);
-      // Serial.print(" ");
+     
     }
 	
 		
@@ -1669,23 +1676,12 @@ void tbchs::decodeAO40bit(unsigned char decoderbyte){
       rs_failures += (rserrs[row] == -1);
     }
 
-    /* If frame decoded OK, deinterleave data from RS codeword(s), and save file */
-   // Serial.print("RSF ");
-  //  for(int j=0;j<256;j++)  Serial.print(RSdecdata[j]);
+ 
     
    
     if(!rs_failures){
      
-      // memset(raw,0,5200);
-      
-         // for(int j=0;j<256;j++) 
-          
-       
-       //  memset(vitdecdata,0,(NBITS-6)/8);
-       //  memset(symbols,0,5200);
-         //rp=0;
-       // energy=0;
-     // rp=0;
+     
    
       int j = 0;
 
@@ -1693,31 +1689,24 @@ void tbchs::decodeAO40bit(unsigned char decoderbyte){
         for(row=0;row<RSBLOCKS;row++){
           RSdecdata[j++] = rsblocks[row][col];
         
-         // Serial.println(RSdecdata[j]);
+       
         }
       }
-      /* and save out succesfully RS-decoded data */
-      //fp=fopen("RSdecdataC","wb");                       /* Output 256 bytes of user's data */
-      //fwrite(RSdecdata,1,sizeof(RSdecdata),fp);
-      //fclose(fp);
+     
 	  storeandisplayFECdata(RSdecdata);
     }
 
     /* Print RS-decode status summary */
     if(Verbose){
-      //delay(10000);
-
-      //delay(20000);
+     
       for(row=0;row<RSBLOCKS;row++){
         if(rserrs[row] != -1){
 		
-         // Serial.print("RS errors");
-         // Serial.println(rserrs[row]);         
+                
         }
         else{
 			
-       //   Serial.println("FAIL ");
-         // delay(2000);
+      
         }
 		char msg[80];
 		int rscorr = rserrs[0]+rserrs[1];
