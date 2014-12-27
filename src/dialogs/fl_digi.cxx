@@ -203,6 +203,8 @@ Fl_Double_Window	*fl_digi_main      = (Fl_Double_Window *)0;
 Fl_Help_Dialog 		*help_dialog       = (Fl_Help_Dialog *)0;
 Fl_Double_Window	*scopeview         = (Fl_Double_Window *)0;
 ssdv_rx			*ssdv              = (ssdv_rx *)0;
+tbchs           *tbc_util          = (tbchs *)0; 
+	
 
 MixerBase* mixer = 0;
 
@@ -5517,6 +5519,9 @@ void create_fl_digi_main_primary() {
 	ssdv = new ssdv_rx(320, 240 + 60, _("SSDV RX"));
 	ssdv->xclass(PACKAGE_NAME);
 	ssdv->hide();
+	
+	tbc_util = new tbchs();
+	tbc_util->init_sync();
 
 	if (!progdefaults.menuicons)
 		toggle_icon_labels();
@@ -6616,6 +6621,8 @@ void create_fl_digi_main_dl_fldigi() {
 	ssdv = new ssdv_rx(320, 240 + 60, _("SSDV RX"));
 	ssdv->xclass(PACKAGE_NAME);
 	ssdv->hide();
+	tbc_util = new tbchs();
+	tbc_util->init_sync();
 
 	struct {
 		bool var; const char* label;
@@ -7012,6 +7019,23 @@ void put_rx_ssdv(unsigned int data, int lost)
 {
 	REQ(put_rx_ssdv_flmain, data, lost);
 }
+
+//TBC
+static void put_fec_flmain(unsigned char data)
+{
+	ENSURE_THREAD(FLMAIN_TID);
+
+	if (tbc_util)
+	{
+		tbc_util->decodeAO40bit(data);
+	}
+}
+
+void put_fec(unsigned char data)
+{
+	REQ(put_fec_flmain, data);
+}
+
 
 static string strSecText = "";
 

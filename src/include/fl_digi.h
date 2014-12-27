@@ -206,6 +206,7 @@ extern void set_scope_clear_axis();
 extern void set_CWwpm();
 extern void put_rx_char(unsigned int data, int style = FTextBase::RECV, bool extracted = false);
 extern void put_rx_ssdv(unsigned int data, int lost);
+extern void put_fec(unsigned char data);
 extern void put_sec_char( char chr );
 
 enum status_timeout {

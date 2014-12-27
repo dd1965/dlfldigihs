@@ -72,6 +72,9 @@ extern waterfall *wf;
 
 char pskmsg[80];
 viewpsk *pskviewer = (viewpsk *)0;
+boolean testforSSDV=true;
+uint16_t ssdvckeck  =0;
+int ssdvcnt=0;
 
 void psk::tx_init(SoundBase *sc)
 {
@@ -217,17 +220,17 @@ psk::psk(trx_mode pskmode) : modem()
 		numcarriers = 1;
 		break;
 	case MODE_PSK500:
-		symbollen = 16;
+		symbollen = 16;//16
 		_qpsk = false;
 		_pskr = false;
-		dcdbits = 512;
+		dcdbits = 512;//512
 		numcarriers = 1;
 		break;
 	case MODE_PSK1000:
-		symbollen = 8;
+		symbollen = 8;//Was 8
 		_qpsk = false;
 		_pskr = false;
-		dcdbits = 128;
+		dcdbits = 512;
 		numcarriers = 1;
 		break;
 
@@ -717,16 +720,33 @@ void psk::s2nreport(void)
 void psk::rx_bit(int bit)
 {
 	int c;
+	//if  (dcd == true) {
+		put_fec((unsigned char) bit);
+	//}
 
 	shreg = (shreg << 1) | !!bit;
 	if (_pskr) {
 		// MFSK varicode instead of PSK Varicode
 		if ((shreg & 7) == 1) {
 			c = varidec(shreg >> 1);
+			if(c== -1) put_status("-1", 10);
 			// Voting at the character level
 			if (fecmet >= fecmet2) {
-				if ((c != -1) && (c != 0) && (dcd == true)) {
+				//if ((c != -1) && (c != 0) && (dcd == true)) {
+					if  (dcd == true) {
 					put_rx_char(c);
+					 put_rx_ssdv(c, 0);
+					
+					/*if(ssdvcnt > 0 && ssdvcnt<256){
+						 put_rx_ssdv(c, 0);//VK3tbc added
+							ssdvcnt++;
+					}else{
+						ssdvcnt=0;
+						if(c == 0x55){
+					        put_rx_ssdv(c, 0);//VK3tbc added
+							ssdvcnt++;
+					}
+					}*/
 					if (progdefaults.Pskmails2nreport && (mailserver || mailclient)) {
 						s2n_sum += s2n_metric;
 						s2n_sum2 += (s2n_metric * s2n_metric);
@@ -762,15 +782,30 @@ void psk::rx_bit(int bit)
 void psk::rx_bit2(int bit)
 {
 	int c;
-
+	//if  (dcd == true) {
+		put_fec((unsigned char) bit);
+	//}
 	shreg2 = (shreg2 << 1) | !!bit;
 	// MFSK varicode instead of PSK Varicode
 	if ((shreg2 & 7) == 1) {
 		c = varidec(shreg2 >> 1);
+		if(c== -1) put_status("-1", 10);
 		// Voting at the character level
 		if (fecmet < fecmet2) {
-			if ((c != -1) && (c != 0) && (dcd == true)) {
+			//if ((c != -1) && (c != 0) && (dcd == true)) {
+				if (dcd == true) {
 				put_rx_char(c);
+				 put_rx_ssdv(c, 0);
+			/*	if(ssdvcnt > 0 && ssdvcnt<256){
+						 put_rx_ssdv(c, 0);//VK3tbc added
+							ssdvcnt++;
+				}else{
+						ssdvcnt=0;
+						if(c == 0x55){
+					        put_rx_ssdv(c, 0);//VK3tbc added
+							ssdvcnt++;
+				}
+				}*/
 				if (progdefaults.Pskmails2nreport && (mailserver || mailclient)) {
 					s2n_sum += s2n_metric;
 					s2n_sum2 += (s2n_metric * s2n_metric);
