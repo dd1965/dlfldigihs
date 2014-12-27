@@ -341,7 +341,10 @@ void cRsId::search(void)
 				reset();
 				return;
 			} else {
-				rsid_secondary_time_out = 3*15*1024;
+				if(active_modem->get_samplerate()>RSID_SAMPLE_RATE )
+				   rsid_secondary_time_out = 3*15*1024*40; //Modified by VK3TBC Extended by Multiplying by 40...Timer do short if modem uses higher sampling rate.
+				else
+					rsid_secondary_time_out = 3*15*1024;
 				return;
 			}
 		} else
