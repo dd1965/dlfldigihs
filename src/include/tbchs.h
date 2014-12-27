@@ -98,9 +98,9 @@ private:
 	int decode_rs_8_fec(char *data, int *eras_pos, int no_eras);
 	int mod255(int x);
      int parity(int x);
-	void init_sync();
+	//void init_sync();
 	long long sumsq_wq(unsigned char *in,int cnt);
-	void decodeAO40bit(unsigned char decoderbyte);
+	//void decodeAO40bit(unsigned char decoderbyte);
 	void bitinwithGCFEC(int bitin);
 	void storeandisplayFECdata(byte* rxByte);
 
@@ -114,7 +114,9 @@ public:
 	int		rx_process(const double *buf, int len);
 	int		tx_process();
 	void	update_syncscope();
-
+	void decodeAO40bit(unsigned char decoderbyte);
+	void init_sync();
+	
 };
 
 #endif
