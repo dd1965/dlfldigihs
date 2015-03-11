@@ -703,7 +703,7 @@ int tbchs::getData1(byte bitin)
 
   int sum = decodeGold1(phasedetectbits); 
  
-  if (sum > 40){
+  if (sum > 35){
 	display_metric(sum*2);
     bitcnt = 8;
 	//put_rx_char('G');
@@ -802,21 +802,21 @@ void tbchs::bitinwithGC(int bitin)
 		   memset (payloadtxtfinal, 0, 90); 
 		   try
            { 
-		   comma = ",";
+		    comma = ",";
 		    asterisk ="*";
 		    dollar= "$$";
-			lcallsign =  strtoparse.substr(2,6);
-			sequence = strtoparse.substr(8,4);
+		    lcallsign =  strtoparse.substr(2,6);
+		    sequence = strtoparse.substr(8,4);
 		    ltime = strtoparse.substr(12,8);
 		    latstring = strtoparse.substr(20,8);
-			longstring = strtoparse.substr(28,9);
-			altitude = strtoparse.substr(37,5);
-			speed = strtoparse.substr(42,3);
-			satno  = strtoparse.substr(45,2);
+		    longstring = strtoparse.substr(28,9);
+	            altitude = strtoparse.substr(37,5);
+		    speed = strtoparse.substr(42,3);
+		    satno  = strtoparse.substr(45,2);
 		    satfix  = strtoparse.substr(47,1);
-			insidetemp = strtoparse.substr(48,3);
+		    insidetemp = strtoparse.substr(48,3);
 		    outsidetemp = strtoparse.substr(51,3);
-			volts = strtoparse.substr(54,3);   
+		    volts = strtoparse.substr(54,3);   
 		    strcat(payloadtxtfinal,dollar.c_str());
 		    strcat(payloadtxt,lcallsign.c_str());
 		    strcat(payloadtxt,comma.c_str());
@@ -832,59 +832,59 @@ void tbchs::bitinwithGC(int bitin)
 		    strcat(payloadtxt,comma.c_str());
 		    strcat(payloadtxt,speed.c_str());
 		    strcat(payloadtxt,comma.c_str());
-			strcat(payloadtxt,satno.c_str());
+		    strcat(payloadtxt,satno.c_str());
 		    strcat(payloadtxt,comma.c_str());
-			strcat(payloadtxt,satfix.c_str());
+		    strcat(payloadtxt,satfix.c_str());
 		    strcat(payloadtxt,comma.c_str());
-			strcat(payloadtxt,insidetemp.c_str());
+		    strcat(payloadtxt,insidetemp.c_str());
 		    strcat(payloadtxt,comma.c_str());
 		    strcat(payloadtxt,outsidetemp.c_str());
 		    strcat(payloadtxt,comma.c_str());
-			strcat(payloadtxt,volts.c_str());
-			s=string(payloadtxt);
+		    strcat(payloadtxt,volts.c_str());
+		    s=string(payloadtxt);
 		    intcrc = crtty_CRC16_checksum (payloadtxt,66) ;
-			char temp[5];
-            snprintf(temp, sizeof(temp), "%.04X", intcrc);
+		    char temp[5];
+                    snprintf(temp, sizeof(temp), "%.04X", intcrc);
 			//checksum_crc16_ccitt();			
 		    strcat(payloadtxt,asterisk.c_str());
 			//strcat(payloadtxt,crcstr.c_str());
-			strcat(payloadtxt,temp);
-			for(int i=0;i<80;i++){
+		    strcat(payloadtxt,temp);
+		    for(int i=0;i<80;i++){
 				payloadtxtfinal[i+2]=payloadtxt[i];
 				
-			}
+		    }
 			//strcat(payloadtxtfinal,(((string)payloadtxt).c_str()));
 		   }
 		   catch (int e)
-           {
-            put_rx_char('E');
-			put_rx_char('R');
-           }
-			char *testp  = "PSB,0001,000000,0.0,0.0,0,0,0,0,107,26,7656";
+                   {
+                        put_rx_char('E');
+	 		put_rx_char('R');
+                    }
+			//char *testp  = "PSB,0001,000000,0.0,0.0,0,0,0,0,107,26,7656";
 			
 			
-             char hex[4];
-             sprintf(hex, "%04x", intcrc);
-			//  put_rx_char('\n');
-			 for(int i=0;i<4;i++){
-				 hex[i]=toupper(hex[i]);
+                   char hex[4];
+                   sprintf(hex, "%04x", intcrc);
+		  	//  put_rx_char('\n');
+		   for(int i=0;i<4;i++){
+			 hex[i]=toupper(hex[i]);
 				// put_rx_char(hex[i]);
-			 }
+		    }
 			//  put_rx_char('\n');
 			// strcat(payloadtxt,hex);
 			//string testpsb= "PSB,0001,000000,0.0,0.0,0,0,0,0,107,26,7656";
 			
 			
-			 for(int i=0;i<73;i++){
-			     put_rx_char(payloadtxtfinal[i]);
-			 }
-			 put_rx_char('\n');
+		    for(int i=0;i<73;i++){
+			 put_rx_char(payloadtxtfinal[i]);
+		     }
+	            put_rx_char('\n');
 		}
 		 
-        memset (rxByte, 0, 256); 
+                memset (rxByte, 0, 256); 
 		memset(pkt,0,256);
-        byteCnt = 0;
-        CodeState = HUNT;
+                byteCnt = 0;
+                CodeState = HUNT;
         
     
 

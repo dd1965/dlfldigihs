@@ -1012,6 +1012,7 @@ void psk::phaseafc()
 	if (afcmetric < 0.05 || 
 		mode == MODE_PSK500 ||
 		mode == MODE_QPSK500 ||
+		mode == MODE_PSK1000 ||      //Added vk3tbc for SSDV mode
 		numcarriers > 1 ) return;
 
 	error = (phase - bits * M_PI / 2.0);
@@ -1156,7 +1157,13 @@ static double averageamp;
 			dcd = false;
 		}
 	}
-
+	//Added by VK3TBC  for SSDV AO40FEC mode. There is no character sync or header
+	if(mode == MODE_PSK1000){
+		dcd = true;
+		acquire = 0;
+		quality = cmplx (1.0, 0.0);
+		imdValid = true;
+	}	
 	if (!_pskr) {
 		set_phase(phase, norm(quality), dcd);
 
